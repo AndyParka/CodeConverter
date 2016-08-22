@@ -41,52 +41,58 @@ public class CodeConverter {
 		state = connect();
 
 		outerloop: while (true) {
-			if (!"ASCII".equals((textin = in.readLine()))) {
-				System.out.println("Initial Line Read: " + textin);
-
+			if (!"ASCII".equals((textin = in.readLine()))) { // Waits for ASCII
+																// command from
+																// Client
+				System.out.println("Error, unexpected response from client: " + textin);
 			} else {
-				out.println("ASCII: OK");
+				// out.println("ASCII: OK");
+				textin = "OK";
 				break outerloop;
 			}
 		}
 
 		while (true) {
 			System.out.println("Start of while loop");
-			if (!"ASCII".equals(textin) && textin != null) {
+			if (!"OK".equals(textin) && textin != null) {
 				System.out.println("REQUEST: " + textin);
 				if ("AC".equals(textin)) {
 					state = AC;
 					out.flush();
 					out.print("CHANGE: OK" + "\r\n");
 					System.out.println("RESPONSE: CHANGE: OK");
-					textin = "ASCII";
+					textin = "OK";
 
 				} else if ("CA".equals(textin)) {
 					state = CA;
 					out.flush();
 					out.print("CHANGE: OK" + "\r\n");
 					System.out.println("RESPONSE: CHANGE: OK");
-					textin = "ASCII";
+					textin = "OK";
 
 				} else if ("END".equals(textin)) {
-					textin = null;
+					System.exit(0);
 
 				} else {
 					if (state == AC) {
 						try {
 							System.out.println("AC CONVERTER");
+							// error checking goes here
 							int temp = Integer.parseInt(textin);
 							if (temp >= 32 || temp <= 255) {
 								char c = (char) temp;
 								System.out.println(c);
 								out.print(c + "\r\n");
+								textin = "OK";
 							} else {
+								textin = "OK";
 								out.print("ERR" + "\r\n");
 							}
 						} catch (Exception e) {
 							out.print("ERR" + "\r\n");
+							e.printStackTrace();
+							textin = "OK";
 						}
-						textin = "ASCII";
 
 					} else if (state == CA) {
 						try {
@@ -95,36 +101,32 @@ public class CodeConverter {
 							 * String temp = String.toCharArray(); String result
 							 * = Character.toString(temp); out.println(result);
 							 */
+							textin = "OK";
 						} catch (Exception e) {
 							e.printStackTrace();
+							out.print("ERR" + "\r\n");
+							textin = "OK";
 						}
-						textin = "ASCII";
 					} else {
 						System.out.println("oops.. you shouldn't be able to see this");
 					}
 				}
+			} else if ("OK".equals(textin)) {
+				// out.flush();
+				// out.print("ASCII: OK" + "\r\n");
+				out.println("ASCII: OK");// this was moved from the top loop,
+											// hope it works. (it does :D )
+				System.out.println("RESPONSE: ASCII: OK");
+				while ((textin = in.readLine()) == "OK") {
+					System.out.println("Line Read: " + textin);
+				}
 			}
-
-			if (textin.equals("END")) {
-				System.exit(0);
-			}
-
 			/*
 			 * while (state == BYE) { state = connect(); } while (state ==
 			 * Error) {
 			 *
 			 * }
 			 */
-			if ("ASCII".equals(textin)) {
-				out.flush();
-				out.print("ASCII: OK" + "\r\n");
-				System.out.println("RESPONSE: ASCII: OK");
-				textin = null;
-				while ((textin = in.readLine()) == null) {
-					System.out.println("Line Read: " + textin);
-
-				}
-			}
 		}
 	}
 
