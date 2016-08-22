@@ -12,13 +12,18 @@ public class CodeClient {
 	static Socket s;
 
 	static BufferedReader in;
+	static BufferedReader user;
 	static PrintWriter out;
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Client Initializing...");
-		String textin = "";
+		String textin = "INIT"; // I don't like starting strings as empty or
+								// null
 		String ip = "127.0.0.1";
 		int port = 1337;
+		user = new BufferedReader(new InputStreamReader(System.in)); // Takes
+																		// user
+																		// input
 
 		if (args.length == 2) {
 			// Take args and sets ip and port to connect to
@@ -30,6 +35,7 @@ public class CodeClient {
 		}
 
 		try {
+			System.out.println("Connecting to " + ip + " : " + port);
 			s = new Socket(ip, port);
 
 			out = new PrintWriter(s.getOutputStream(), true);
@@ -42,8 +48,21 @@ public class CodeClient {
 		out.println("ASCII");
 		System.out.println("CLIENT: ASCII");
 
-		while ((textin = in.readLine()) != null) {
-			System.out.println(textin);
+		if (!"ASCII: OK".equals((textin = in.readLine()))) {
+			System.out.println("Invalid response from server.");
+			System.exit(0);
+		} else {
+			System.out.println("SERVER: " + textin);
+		}
+		while (true) {
+			if ("END".equals(textin)) {
+
+			} else if ("BYE".equals(textin)) {
+
+			} else if ("CHANGE: OK".equals(textin)) {
+				textin = user.readLine();
+
+			}
 		}
 	}
 }
