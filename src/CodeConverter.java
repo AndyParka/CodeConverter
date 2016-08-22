@@ -39,7 +39,16 @@ public class CodeConverter {
 		// initialize server socket
 		ss = new ServerSocket(port);
 		state = connect();
-		textin = "ASCII";
+
+		outerloop: while (true) {
+			if (!"ASCII".equals((textin = in.readLine()))) {
+				System.out.println("Initial Line Read: " + textin);
+
+			} else {
+				out.println("ASCII: OK");
+				break outerloop;
+			}
+		}
 
 		while (true) {
 			System.out.println("Start of while loop");
@@ -48,14 +57,14 @@ public class CodeConverter {
 				if ("AC".equals(textin)) {
 					state = AC;
 					out.flush();
-					out.println("CHANGE: OK");
+					out.print("CHANGE: OK" + "\r\n");
 					System.out.println("RESPONSE: CHANGE: OK");
 					textin = "ASCII";
 
 				} else if ("CA".equals(textin)) {
 					state = CA;
 					out.flush();
-					out.println("CHANGE: OK");
+					out.print("CHANGE: OK" + "\r\n");
 					System.out.println("RESPONSE: CHANGE: OK");
 					textin = "ASCII";
 
@@ -70,12 +79,12 @@ public class CodeConverter {
 							if (temp >= 32 || temp <= 255) {
 								char c = (char) temp;
 								System.out.println(c);
-								out.println(c);
+								out.print(c + "\r\n");
 							} else {
-								out.println("ERR");
+								out.print("ERR" + "\r\n");
 							}
 						} catch (Exception e) {
-							out.println("ERR");
+							out.print("ERR" + "\r\n");
 						}
 						textin = "ASCII";
 
@@ -108,7 +117,7 @@ public class CodeConverter {
 			 */
 			if ("ASCII".equals(textin)) {
 				out.flush();
-				out.println("ASCII: OK");
+				out.print("ASCII: OK" + "\r\n");
 				System.out.println("RESPONSE: ASCII: OK");
 				textin = null;
 				while ((textin = in.readLine()) == null) {
@@ -124,7 +133,7 @@ public class CodeConverter {
 		// will return as an int to tell the server that the client is connected
 		try {
 			s = ss.accept();
-			out = new PrintWriter(s.getOutputStream(), false);
+			out = new PrintWriter(s.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 
 			System.out.println("Client Connected");
