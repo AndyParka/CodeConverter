@@ -51,7 +51,6 @@ public class CodeConverter {
 					textin = "OK";
 				} else if ("CA".equals(textin)) {
 					state = CA;
-					out.flush();
 					out.println("CHANGE: OK");
 					System.out.println("RESPONSE: CHANGE: OK");
 					textin = "OK";
@@ -95,6 +94,7 @@ public class CodeConverter {
 								int ascii = temp; // converts char to int
 													// representing the ASCII
 													// value of the char
+								System.out.println(ascii);
 								out.println(ascii);
 							} else {
 								out.println("ERR");
