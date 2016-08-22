@@ -17,10 +17,10 @@ public class CodeClient {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Client Initializing...");
-		String textin = "INIT"; // I don't like starting strings as empty or
-								// null
+		String textin = "INIT";
 		String ip = "127.0.0.1";
-		int port = 1337;
+		int port = 12345;
+
 		user = new BufferedReader(new InputStreamReader(System.in)); // Takes
 																		// user
 																		// input
@@ -45,24 +45,57 @@ public class CodeClient {
 			e.printStackTrace();
 		}
 
+		// initial handshake -->
 		out.println("ASCII");
 		System.out.println("CLIENT: ASCII");
 
+		// read ascii: ok <--
 		if (!"ASCII: OK".equals((textin = in.readLine()))) {
 			System.out.println("Invalid response from server.");
 			System.exit(0);
 		} else {
+
+			// display ascii ok V
 			System.out.println("SERVER: " + textin);
+
+			// input stuff V
+			System.out.println("Usage:");
+			System.out.println("[AC, CA, BYE, END]");
+			System.out.print(">");
+			textin = user.readLine();
+
+			// display client: V
+			System.out.println("Client: " + textin);
 		}
+
 		while (true) {
-			if ("END".equals(textin)) {
 
-			} else if ("BYE".equals(textin)) {
+			// send to server -->
+			out.println(textin);
 
-			} else if ("CHANGE: OK".equals(textin)) {
-				textin = user.readLine();
+			// read server <--
+			textin = in.readLine();
+			// display server: V
+			System.out.println("Server: " + textin);
 
+			// determine if END or BYE
+			if ("END: OK".equals(textin) || "BYE: OK".equals(textin)) {
+				System.out.println("Client shutting down");
+				System.exit(0);
 			}
+
+			// read ascii: ok <--
+			if ("ASCII: OK".equals(textin = in.readLine())) {
+				// display ascii ok V
+				System.out.println("SERVER: " + textin);
+
+				// input stuff V
+				System.out.print(">");
+				textin = user.readLine();
+				// display client: V
+				System.out.println("Client: " + textin);
+			}
+			// loop
 		}
 	}
 }

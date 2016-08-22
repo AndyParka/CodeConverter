@@ -23,7 +23,7 @@ public class CodeConverter {
 
 		System.out.println("Server Initializing...");
 		int port = 1337; // 1337 because i'm L33T
-		int state = AC; // holds the state of the converter, AC or CA
+		int state = CA; // holds the state of the converter, AC or CA
 		String textin = null;
 
 		if (args.length > 0) {
