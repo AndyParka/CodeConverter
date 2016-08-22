@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,16 +9,28 @@ import java.net.Socket;
  *         TEXT and TEXT to ASCII For SENG3400 S2 2016 - University of Newcastle
  */
 public class CodeClient {
+	static Socket s;
+
+	static BufferedReader in;
+	static PrintWriter out;
+
 	public static void main(String[] args) throws IOException {
 		System.out.println("Client Initializing...");
 		String textin = "";
-		String textout = "";
-		String userinput = "";
+		String ip = "127.0.0.1";
+		int port = 1337;
+
+		if (args.length == 2) {
+			// Take args and sets ip and port to connect to
+			ip = args[0];
+			port = Integer.parseInt(args[1]);
+		} else if (args.length == 1) {
+			// Take args and assumes localhost, sets the port number
+			port = Integer.parseInt(args[0]);
+		}
 
 		try {
-			s = new Socket("127.0.0.1", 1337);
-			// din = new DataInputStream(s.getInputStream());
-			// dout = new DataOutputStream(s.getOutputStream());
+			s = new Socket(ip, port);
 
 			out = new PrintWriter(s.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -35,32 +46,4 @@ public class CodeClient {
 			System.out.println(textin);
 		}
 	}
-
-	static Socket s;
-
-	static BufferedReader in;
-	static PrintWriter out;
-
-	private static String TakeInput() {
-		// Input
-		Console console = null;
-		String inputString = null;
-
-		try {
-			// creates a console object
-			console = System.console();
-			// if console is not null
-			if (console != null) {
-				// read line from the user input
-				inputString = console.readLine("> ");
-				// prints
-				// System.out.println("Name entered : " + inputString);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return inputString;
-
-	}
-
 }
