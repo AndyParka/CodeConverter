@@ -55,12 +55,12 @@ public class CodeConverter {
 					System.out.println("RESPONSE: CHANGE: OK");
 					textin = "OK";
 				} else if ("BYE".equals(textin)) {
-					out.println("BYE OK");
-					System.out.println("RESPONSE: BYE OK");
+					out.println("BYE: OK");
+					System.out.println("RESPONSE: BYE: OK");
 					textin = connect();
 				} else if ("END".equals(textin)) {
-					out.println("END OK");
-					System.out.println("RESPONSE: END OK");
+					out.println("END: OK");
+					System.out.println("RESPONSE: END: OK");
 					System.exit(0);
 
 				} else {
